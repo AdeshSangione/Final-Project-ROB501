@@ -32,9 +32,9 @@ def detect_and_match(img1, img2, Draw = 0):
     gray_right = cv2.cvtColor(imgR, cv2.COLOR_BGR2GRAY)
     
     #Create instance of SIFT and find keypoints in left and right grayscale images
-    surf = cv2.(400)
-    kpL, desL = surf.detectAndCompute(gray_left,None)
-    kpR, desR = surf.detectAndCompute(gray_right,None)
+    sift = cv2.SIFT_create()
+    kpL, desL = sift.detectAndCompute(gray_left,None)
+    kpR, desR = sift.detectAndCompute(gray_right,None)
     return len(kpL)
 #     #Match keypoints using KNN, with a neighbourhood of 2
 #     bf = cv2.BFMatcher()
@@ -57,10 +57,19 @@ def detect_and_match(img1, img2, Draw = 0):
 
 img1 = plt.imread('Frame_0.png')
 img2 = plt.imread('Frame_2.png')
-img1 = img1*255
-img2 = img2*255     
-        
+
+scale_percent = 40 # percent of original size
+width = int(img1.shape[1] * scale_percent / 100)
+height = int(img2.shape[0] * scale_percent / 100)
+dim = (width, height)
+
+img1 = cv2.resize(img1, dim, interpolation = cv2.INTER_LINEAR)
+img2 = cv2.resize(img2, dim, interpolation = cv2.INTER_LINEAR)
+
+img1 = (img1*255).astype(np.uint8)
+img2 = (img2*255).astype(np.uint8)
 kpL = detect_and_match(img1, img2)
+
 print(kpL)
 
 
